@@ -1,4 +1,4 @@
-package com.emrehayat.weatherproject
+package com.emrehayat.weatherproject.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
