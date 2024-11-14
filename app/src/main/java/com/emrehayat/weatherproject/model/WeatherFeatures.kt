@@ -1,5 +1,8 @@
 package com.emrehayat.weatherproject.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 data class WeatherFeatures(
     val lat: Double,
     val lon: Double,
@@ -25,8 +28,10 @@ data class Current (
     val windGust: Double,
     val weather: List<Weather>
 )
-
+@Entity
 data class Weather (
+    @PrimaryKey(autoGenerate = true)
+    var uuid : Int = 0,
     val id: Long,
     val main: String,
     val description: String,
