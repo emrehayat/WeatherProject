@@ -5,12 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.emrehayat.weatherproject.databinding.FragmentWeatherDetailBinding
+import com.emrehayat.weatherproject.util.downloadImage
+import com.emrehayat.weatherproject.util.makePlaceholder
+import com.emrehayat.weatherproject.viewmodel.WeatherDetailViewModel
+import com.emrehayat.weatherproject.viewmodel.WeatherListViewModel
 
 class WeatherDetailFragment : Fragment() {
 
     private var _binding: FragmentWeatherDetailBinding? = null
     private val binding get() = _binding!!
+    private lateinit var viewModel: WeatherDetailViewModel
+    var weatherId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +27,6 @@ class WeatherDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentWeatherDetailBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
@@ -28,7 +34,20 @@ class WeatherDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        arguments?.let {
+            weatherId = WeatherDetailFragmentArgs.fromBundle(it).weatherId
+        }
+        viewModel = ViewModelProvider(this)[WeatherDetailViewModel::class.java]
+        viewModel.getRoomData(weatherId)
+        //observeLiveData()
     }
+
+    /*fun observeLiveData() {
+        viewModel.weatherLiveData.observe(viewLifecycleOwner) { weather ->
+
+        }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

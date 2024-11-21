@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.emrehayat.weatherproject.adapter.WeatherRecyclerAdapter
 import com.emrehayat.weatherproject.databinding.FragmentWeatherListBinding
 import com.emrehayat.weatherproject.viewmodel.WeatherListViewModel
@@ -24,7 +26,6 @@ class WeatherListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentWeatherListBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
@@ -32,8 +33,47 @@ class WeatherListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.swipeRefreshLayout.setOnRefreshListener {
 
+        viewModel = ViewModelProvider(this)[WeatherListViewModel::class.java]
+        viewModel.refreshData()
+
+        binding.weatherRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.weatherRecyclerView.adapter = weatherRecyclerAdapter
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.weatherLoading.visibility = View.VISIBLE
+            binding.weatherErrorMessage.visibility = View.GONE
+            binding.weatherRecyclerView.visibility = View.GONE
+            viewModel.refreshDataFromInternet()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
+
+        observeLiveData()
+    }
+
+    fun observeLiveData() {
+        viewModel.weatherValues.observe(viewLifecycleOwner) {
+            weatherRecyclerAdapter.updateWeatherList(it)
+            binding.weatherRecyclerView.visibility = View.VISIBLE
+        }
+
+        viewModel.weatherErrorMessage.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.weatherErrorMessage.visibility = View.VISIBLE
+                binding.weatherRecyclerView.visibility = View.GONE
+            } else {
+                binding.weatherErrorMessage.visibility = View.GONE
+            }
+        }
+
+        viewModel.weatherLoading.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.weatherRecyclerView.visibility = View.GONE
+                binding.weatherErrorMessage.visibility = View.GONE
+                binding.weatherLoading.visibility = View.VISIBLE
+            } else {
+                binding.weatherLoading.visibility = View.GONE
+            }
         }
     }
 
