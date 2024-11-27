@@ -40,14 +40,26 @@ class WeatherDetailFragment : Fragment() {
         }
         viewModel = ViewModelProvider(this)[WeatherDetailViewModel::class.java]
         viewModel.getRoomData(weatherId)
-        //observeLiveData()
+        observeLiveData()
     }
 
-    /*fun observeLiveData() {
-        viewModel.weatherLiveData.observe(viewLifecycleOwner) { weather ->
-
-        }
-    }*/
+    fun observeLiveData() {
+        /*viewModel.weatherLiveData.observe(viewLifecycleOwner) { weather ->
+            weather?.let {
+                binding.cityName.text = it.cityName
+                binding.temperatureDetail.text = "Sıcaklık: ${it.temperature} °C"
+                binding.humidityRate.text = "Nem: ${it.humidity}%"
+                binding.wind.text = "Rüzgar: ${it.windSpeed} m/s"
+                binding.rainfall.text = if (it.rainfall != null) {
+                    "Yağış: ${it.rainfall} mm"
+                } else {
+                    "Yağış: Bilgi yok"
+                }
+                val iconUrl = "https://openweathermap.org/img/wn/${it.weatherIcon}.png"
+                binding.weatherImageDetail.downloadImage(iconUrl, makePlaceholder(requireContext()))
+            }
+        }*/
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

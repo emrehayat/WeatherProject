@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.emrehayat.weatherproject.model.WeatherFeatures
 import com.emrehayat.weatherproject.service.WeatherAPIService
 import androidx.lifecycle.viewModelScope
+import com.emrehayat.weatherproject.model.Weather
 import com.emrehayat.weatherproject.roomdb.WeatherDatabase
 import com.emrehayat.weatherproject.util.SpecialSharedPreferences
 import kotlinx.coroutines.Dispatchers
@@ -42,11 +43,45 @@ class WeatherListViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch(Dispatchers.IO) {
             val weatherList = WeatherDatabase(getApplication()).weatherDao().getAllWeather()
             withContext(Dispatchers.Main) {
-                //showWeather(weatherList)
+                showWeather(weatherList)
                 Toast.makeText(getApplication(), "Besinleri Room'dan aldık.", Toast.LENGTH_LONG).show()
             }
         }
     }
+
+    /*private fun getDataFromInternet() {
+        weatherLoading.value = true
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val apiResponse = weatherAPIService.getData()
+
+                val weather = WeatherFeatures(
+                    cityName = apiResponse.cityName,
+                    temperature = apiResponse.main.temp,
+                    humidity = apiResponse.main.humidity,
+                    windSpeed = apiResponse.wind.speed,
+                    rainfall = apiResponse.rain?.lastHour,
+                    weatherIcon = apiResponse.weather[0].icon
+                )
+
+                val weatherList = listOf(weather)
+
+                withContext(Dispatchers.Main) {
+                    saveToRoom(weatherList)
+                    Toast.makeText(getApplication(), "Veriler internetten alındı.", Toast.LENGTH_LONG).show()
+                }
+
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    weatherLoading.value = false
+                    weatherErrorMessage.value = true
+                    Toast.makeText(getApplication(), "Hata: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }*/
+
 
     private fun getDataFromInternet() {
         weatherLoading.value = true
@@ -71,11 +106,18 @@ class WeatherListViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             val dao = WeatherDatabase(getApplication()).weatherDao()
             dao.deleteAllWeather()
-            //val uuidList = dao.insertAll(*weatherList.toTypedArray())
+            val uuidList = dao.insertAll(*weatherList.toTypedArray())
+            weatherList.forEachIndexed { index, weatherFeature ->
+                weatherFeature.current.weather.getOrNull(0)?.uuid = uuidList[index].toInt()
+
+            /*val dao = WeatherDatabase(getApplication()).weatherDao()
+            dao.deleteAllWeather()
+            val uuidList = dao.insertAll(*weatherList.toTypedArray())
             var i = 0
             while (i < weatherList.size) {
                 //weatherList[i].current.weather[0].uuid = uuidList[i].toInt()
-                i += 1
+                weatherList[i].current.weather.getOrNull(0)?.uuid = uuidList[i].toInt()
+                i += 1*/
             }
             showWeather(weatherList)
         }

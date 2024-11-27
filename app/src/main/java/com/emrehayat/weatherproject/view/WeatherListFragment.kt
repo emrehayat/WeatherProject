@@ -47,7 +47,6 @@ class WeatherListFragment : Fragment() {
             viewModel.refreshDataFromInternet()
             binding.swipeRefreshLayout.isRefreshing = false
         }
-
         observeLiveData()
     }
 

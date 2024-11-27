@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.emrehayat.weatherproject.R
 import com.emrehayat.weatherproject.databinding.WeatherRecyclerRowBinding
 import com.emrehayat.weatherproject.model.Weather
 import com.emrehayat.weatherproject.model.WeatherFeatures
@@ -43,6 +44,7 @@ class WeatherRecyclerAdapter(val weatherList: ArrayList<WeatherFeatures>) : Recy
             }
         }
 
-        holder.view.weatherImage.downloadImage(weatherList[position].current.weather[0].icon, makePlaceholder(holder.itemView.context))
+        //holder.view.weatherImage.downloadImage(weather.icon, makePlaceholder(holder.itemView.context))
+        holder.view.weatherImage.setImageResource(R.mipmap.ic_launcher_round)
     }
 }

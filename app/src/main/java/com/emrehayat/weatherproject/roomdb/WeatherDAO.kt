@@ -3,7 +3,9 @@ package com.emrehayat.weatherproject.roomdb
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import com.emrehayat.weatherproject.model.Weather
+import com.emrehayat.weatherproject.model.WeatherWithDetails
 
 @Dao
 interface WeatherDAO {
@@ -18,4 +20,8 @@ interface WeatherDAO {
 
     @Query("DELETE FROM weather")
     suspend fun deleteAllWeather()
+
+    @Transaction
+    @Query("SELECT * FROM weather WHERE uuid = :uuid")
+    suspend fun getWeatherWithDetails(uuid: Int): WeatherWithDetails
 }
