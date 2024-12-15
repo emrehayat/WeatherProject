@@ -44,21 +44,21 @@ class WeatherDetailFragment : Fragment() {
     }
 
     fun observeLiveData() {
-        /*viewModel.weatherLiveData.observe(viewLifecycleOwner) { weather ->
+        viewModel.weatherLiveData.observe(viewLifecycleOwner) { weather ->
             weather?.let {
-                binding.cityName.text = it.cityName
-                binding.temperatureDetail.text = "Sıcaklık: ${it.temperature} °C"
-                binding.humidityRate.text = "Nem: ${it.humidity}%"
-                binding.wind.text = "Rüzgar: ${it.windSpeed} m/s"
-                binding.rainfall.text = if (it.rainfall != null) {
-                    "Yağış: ${it.rainfall} mm"
+                binding.cityName.text = it.weatherFeatures.cityName
+                binding.temperatureDetail.text = "Sıcaklık: ${it.weatherFeatures.temperature} °C"
+                binding.humidityRate.text = "Nem: ${it.weatherFeatures.humidity}%"
+                binding.wind.text = "Rüzgar: ${it.weatherFeatures.windSpeed} m/s"
+                binding.rainfall.text = if (it.weatherFeatures.rainfall != null) {
+                    "Yağış: ${it.weatherFeatures.rainfall} mm"
                 } else {
                     "Yağış: Bilgi yok"
                 }
-                val iconUrl = "https://openweathermap.org/img/wn/${it.weatherIcon}.png"
+                val iconUrl = "https://openweathermap.org/img/wn/${it.weatherFeatures.weatherIcon}.png"
                 binding.weatherImageDetail.downloadImage(iconUrl, makePlaceholder(requireContext()))
             }
-        }*/
+        }
     }
 
     override fun onDestroyView() {

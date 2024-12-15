@@ -44,7 +44,6 @@ class WeatherRecyclerAdapter(val weatherList: ArrayList<WeatherFeatures>) : Recy
             }
         }
 
-        //holder.view.weatherImage.downloadImage(weather.icon, makePlaceholder(holder.itemView.context))
         holder.view.weatherImage.setImageResource(R.mipmap.ic_launcher_round)
     }
 }

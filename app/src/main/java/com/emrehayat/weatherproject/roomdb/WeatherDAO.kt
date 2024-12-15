@@ -22,6 +22,6 @@ interface WeatherDAO {
     suspend fun deleteAllWeather()
 
     @Transaction
-    @Query("SELECT * FROM weather WHERE uuid = :uuid")
+    @Query("SELECT * FROM WeatherFeatures WHERE id = :uuid")
     suspend fun getWeatherWithDetails(uuid: Int): WeatherWithDetails
 }

@@ -17,7 +17,8 @@ data class WeatherFeatures(
     val humidity: Int,
     val windSpeed: Double,
     val rainfall: Double?,
-    val weatherIcon: String?
+    val weatherIcon: String?,
+    val current: Current
 )
 
 @Entity
@@ -36,7 +37,8 @@ data class Current(
     val visibility: Long,
     val windSpeed: Double,
     val windDeg: Long,
-    val windGust: Double
+    val windGust: Double,
+    val weather: List<Weather>
 )
 
 @Entity
@@ -60,7 +62,7 @@ data class WeatherWithDetails(
         parentColumn = "id",
         entityColumn = "weatherFeaturesId"
     )
-    val current: Current
+    val current: Current?
 )
 
 
