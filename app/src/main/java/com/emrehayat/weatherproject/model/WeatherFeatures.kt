@@ -1,5 +1,6 @@
 package com.emrehayat.weatherproject.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -14,7 +15,7 @@ data class WeatherFeatures(
     val timezoneOffset: Long,
     val cityName: String,
     val temperature: Double,
-    val humidity: Int,
+    @ColumnInfo(name = "features_humidity") val humidity: Int, // Sütun adı özelleştirildi
     val windSpeed: Double,
     val rainfall: Double?,
     val weatherIcon: String?,
@@ -30,7 +31,7 @@ data class Current(
     val temp: Double,
     val feelsLike: Double,
     val pressure: Long,
-    val humidity: Long,
+    @ColumnInfo(name = "current_humidity") val humidity: Long, // Sütun adı özelleştirildi
     val dewPoint: Double,
     val uvi: Double,
     val clouds: Long,

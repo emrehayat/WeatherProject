@@ -87,7 +87,7 @@ class WeatherListViewModel(application: Application) : AndroidViewModel(applicat
         weatherLoading.value = true
 
         viewModelScope.launch(Dispatchers.IO) {
-            val weatherList = weatherAPIService.getData()
+            val weatherList = weatherAPIService.getWeatherData()
             withContext(Dispatchers.Main) {
                 weatherLoading.value = false
                 saveToRoom(weatherList)
