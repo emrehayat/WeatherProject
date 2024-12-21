@@ -44,7 +44,7 @@ data class Current(
 
 @Entity
 data class Weather(
-    @PrimaryKey(autoGenerate = true) val uuid: Int = 0,
+    @PrimaryKey(autoGenerate = true) var uuid: Int = 0,
     val id: Long,
     val main: String,
     val description: String,
