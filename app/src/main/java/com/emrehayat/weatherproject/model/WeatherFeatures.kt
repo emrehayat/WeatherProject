@@ -1,104 +1,61 @@
 package com.emrehayat.weatherproject.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.Relation
+import androidx.room.*
 
-@Entity
+@Entity(tableName = "weather_features")
 data class WeatherFeatures(
     @PrimaryKey val id: Int,
     val lat: Double,
     val lon: Double,
     val timezone: String,
-    val timezoneOffset: Long,
-    val cityName: String,
+    @ColumnInfo(name = "timezone_offset") val timezoneOffset: Long,
+    @ColumnInfo(name = "city_name") val cityName: String,
     val temperature: Double,
-    @ColumnInfo(name = "features_humidity") val humidity: Int, // Sütun adı özelleştirildi
-    val windSpeed: Double,
+    @ColumnInfo(name = "features_humidity") val humidity: Int,
+    @ColumnInfo(name = "features_wind_speed") val windSpeed: Double,
     val rainfall: Double?,
-    val weatherIcon: String?,
-    val current: Current
+    @ColumnInfo(name = "weather_icon") val weatherIcon: String?
 )
 
-@Entity
+@Entity(tableName = "current_weather")
 data class Current(
-    @PrimaryKey val weatherFeaturesId: Int,
+    @PrimaryKey
+    @ColumnInfo(name = "weather_features_id") val weatherFeaturesId: Int,
     val dt: Long,
     val sunrise: Long,
     val sunset: Long,
     val temp: Double,
-    val feelsLike: Double,
+    @ColumnInfo(name = "feels_like") val feelsLike: Double,
     val pressure: Long,
-    @ColumnInfo(name = "current_humidity") val humidity: Long, // Sütun adı özelleştirildi
-    val dewPoint: Double,
+    @ColumnInfo(name = "current_humidity") val humidity: Long,
+    @ColumnInfo(name = "dew_point") val dewPoint: Double,
     val uvi: Double,
     val clouds: Long,
     val visibility: Long,
-    val windSpeed: Double,
-    val windDeg: Long,
-    val windGust: Double,
-    val weather: List<Weather>
+    @ColumnInfo(name = "current_wind_speed") val windSpeed: Double,
+    @ColumnInfo(name = "wind_deg") val windDeg: Long,
+    @ColumnInfo(name = "wind_gust") val windGust: Double
 )
 
-@Entity
+@Entity(tableName = "weather")
 data class Weather(
     @PrimaryKey(autoGenerate = true) var uuid: Int = 0,
-    val id: Long,
     val main: String,
     val description: String,
     val icon: String,
-    val weatherFeaturesId: Int // WeatherFeatures ile ilişki kuran foreign key
+    @ColumnInfo(name = "weather_features_id") val weatherFeaturesId: Int
 )
 
 data class WeatherWithDetails(
     @Embedded val weatherFeatures: WeatherFeatures,
     @Relation(
         parentColumn = "id",
-        entityColumn = "weatherFeaturesId"
+        entityColumn = "weather_features_id"
     )
-    val weather: List<Weather>,
+    val current: Current,
     @Relation(
         parentColumn = "id",
-        entityColumn = "weatherFeaturesId"
+        entityColumn = "weather_features_id"
     )
-    val current: Current?
-)
-
-
-
-/*data class WeatherFeatures(
-    val lat: Double,
-    val lon: Double,
-    val timezone: String,
-    val timezoneOffset: Long,
-    val current: Current
-)
-
-data class Current (
-    val dt: Long,
-    val sunrise: Long,
-    val sunset: Long,
-    val temp: Double,
-    val feelsLike: Double,
-    val pressure: Long,
-    val humidity: Long,
-    val dewPoint: Double,
-    val uvi: Double,
-    val clouds: Long,
-    val visibility: Long,
-    val windSpeed: Double,
-    val windDeg: Long,
-    val windGust: Double,
     val weather: List<Weather>
 )
-@Entity
-data class Weather (
-    @PrimaryKey(autoGenerate = true)
-    var uuid : Int = 0,
-    val id: Long,
-    val main: String,
-    val description: String,
-    val icon: String
-)*/

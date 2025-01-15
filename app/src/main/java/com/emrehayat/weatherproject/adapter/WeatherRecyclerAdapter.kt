@@ -4,28 +4,27 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
-import com.emrehayat.weatherproject.R
 import com.emrehayat.weatherproject.databinding.WeatherRecyclerRowBinding
-import com.emrehayat.weatherproject.model.Weather
 import com.emrehayat.weatherproject.model.WeatherFeatures
 import com.emrehayat.weatherproject.util.downloadImage
 import com.emrehayat.weatherproject.util.makePlaceholder
 import com.emrehayat.weatherproject.view.WeatherListFragmentDirections
 
-class WeatherRecyclerAdapter(val weatherList: ArrayList<WeatherFeatures>) : RecyclerView.Adapter<WeatherRecyclerAdapter.WeatherViewHolder>() {
+class WeatherRecyclerAdapter(val weatherList: ArrayList<WeatherFeatures>) : 
+    RecyclerView.Adapter<WeatherRecyclerAdapter.WeatherViewHolder>() {
 
-    class WeatherViewHolder(var view: WeatherRecyclerRowBinding) : RecyclerView.ViewHolder(view.root) {
-
-    }
+    class WeatherViewHolder(var view: WeatherRecyclerRowBinding) : RecyclerView.ViewHolder(view.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
-        val binding: WeatherRecyclerRowBinding = WeatherRecyclerRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = WeatherRecyclerRowBinding.inflate(
+            LayoutInflater.from(parent.context), 
+            parent, 
+            false
+        )
         return WeatherViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return weatherList.size
-    }
+    override fun getItemCount(): Int = weatherList.size
 
     fun updateWeatherList(newWeatherList: List<WeatherFeatures>) {
         weatherList.clear()
@@ -34,16 +33,23 @@ class WeatherRecyclerAdapter(val weatherList: ArrayList<WeatherFeatures>) : Recy
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
-        holder.view.locationName.text = weatherList[position].lat.toString()
-        holder.view.temperature.text = weatherList[position].current.temp.toString()
+        val weather = weatherList[position]
+        holder.view.apply {
+            locationName.text = weather.cityName
+            temperature.text = "%.1f°C".format(weather.temperature)
+            weatherType.text = "Nem: %${weather.humidity}"
 
-        holder.itemView.setOnClickListener {
-            if (weatherList[position].current.weather.isNotEmpty()) {
-                val action = WeatherListFragmentDirections.actionWeatherListFragmentToWeatherDetailFragment(weatherList[position].current.weather[0].uuid)
-                Navigation.findNavController(it).navigate(action)
+            // Hava durumu ikonunu yükle
+            weather.weatherIcon?.let { iconCode ->
+                val iconUrl = "https://openweathermap.org/img/wn/${iconCode}@2x.png"
+                weatherImage.downloadImage(iconUrl, makePlaceholder(holder.itemView.context))
             }
         }
 
-        holder.view.weatherImage.setImageResource(R.mipmap.ic_launcher_round)
+        holder.itemView.setOnClickListener {
+            val action = WeatherListFragmentDirections
+                .actionWeatherListFragmentToWeatherDetailFragment(weather.id)
+            Navigation.findNavController(it).navigate(action)
+        }
     }
 }

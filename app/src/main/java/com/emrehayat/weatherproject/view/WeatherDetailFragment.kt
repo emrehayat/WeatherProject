@@ -44,19 +44,23 @@ class WeatherDetailFragment : Fragment() {
     }
 
     fun observeLiveData() {
-        viewModel.weatherLiveData.observe(viewLifecycleOwner) { weather ->
-            weather?.let {
+        viewModel.weatherLiveData.observe(viewLifecycleOwner) { weatherWithDetails ->
+            weatherWithDetails?.let {
                 binding.cityName.text = it.weatherFeatures.cityName
-                binding.temperatureDetail.text = "Sıcaklık: ${it.weatherFeatures.temperature} °C"
-                binding.humidityRate.text = "Nem: ${it.weatherFeatures.humidity}%"
-                binding.wind.text = "Rüzgar: ${it.weatherFeatures.windSpeed} m/s"
-                binding.rainfall.text = if (it.weatherFeatures.rainfall != null) {
-                    "Yağış: ${it.weatherFeatures.rainfall} mm"
+                binding.temperatureDetail.text = "Sıcaklık: %.1f°C".format(it.weatherFeatures.temperature)
+                binding.humidityRate.text = "Nem: %${it.weatherFeatures.humidity}"
+                binding.wind.text = "Rüzgar: %.1f m/s".format(it.weatherFeatures.windSpeed)
+                binding.rainfall.text = if (it.weatherFeatures.rainfall != null && it.weatherFeatures.rainfall > 0) {
+                    "Yağış: %.1f mm".format(it.weatherFeatures.rainfall)
                 } else {
-                    "Yağış: Bilgi yok"
+                    "Yağış: Yok"
                 }
-                val iconUrl = "https://openweathermap.org/img/wn/${it.weatherFeatures.weatherIcon}.png"
-                binding.weatherImageDetail.downloadImage(iconUrl, makePlaceholder(requireContext()))
+
+                // Weather ikonunu yükle
+                it.weatherFeatures.weatherIcon?.let { iconCode ->
+                    val iconUrl = "https://openweathermap.org/img/wn/${iconCode}@2x.png"
+                    binding.weatherImageDetail.downloadImage(iconUrl, makePlaceholder(requireContext()))
+                }
             }
         }
     }

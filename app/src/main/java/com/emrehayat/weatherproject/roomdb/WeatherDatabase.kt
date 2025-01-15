@@ -10,17 +10,18 @@ import com.emrehayat.weatherproject.model.Weather
 import com.emrehayat.weatherproject.model.WeatherFeatures
 import com.emrehayat.weatherproject.util.Converters
 
-@Database(entities = [WeatherFeatures::class, Weather::class, Current::class], version = 1, exportSchema = false)
+@Database(
+    entities = [WeatherFeatures::class, Current::class, Weather::class],
+    version = 2,
+    exportSchema = false
+)
 @TypeConverters(Converters::class)
-//@Database(entities = [Weather::class], version = 1)
 abstract class WeatherDatabase : RoomDatabase() {
-    abstract fun weatherDao() : WeatherDAO
+    abstract fun weatherDao(): WeatherDAO
 
     companion object {
-
         @Volatile
         private var instance: WeatherDatabase? = null
-
         private val lock = Any()
 
         operator fun invoke(context: Context) = instance ?: synchronized(lock) {
@@ -32,7 +33,8 @@ abstract class WeatherDatabase : RoomDatabase() {
         private fun createDatabase(context: Context) = Room.databaseBuilder(
             context.applicationContext,
             WeatherDatabase::class.java,
-            "besindatabase"
-        ).build()
+            "weather_database"
+        ).fallbackToDestructiveMigration()
+         .build()
     }
 }

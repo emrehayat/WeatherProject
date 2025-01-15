@@ -2,7 +2,7 @@ package com.emrehayat.weatherproject.service
 
 
 import com.emrehayat.weatherproject.BuildConfig
-import com.emrehayat.weatherproject.model.WeatherFeatures
+import com.emrehayat.weatherproject.model.WeatherApiResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,11 +15,10 @@ interface WeatherAPI {
     //@GET("data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid=${BuildConfig.API_KEY}")
     //suspend fun getWeather() : List<WeatherFeatures>
 
-    @GET("data/3.0/onecall")
+    @GET("data/2.5/weather")
     suspend fun getWeather(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("exclude") exclude: String,
         @Query("appid") apiKey: String
-    ): WeatherFeatures
+    ): WeatherApiResponse
 }

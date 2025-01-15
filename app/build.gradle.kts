@@ -19,6 +19,18 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // API Key'i local.properties'den al
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+            val weatherApiKey = localProperties.getProperty("WEATHER_API_KEY")
+            println("Weather API Key: $weatherApiKey") // Build sırasında API key'i görmek için
+            buildConfigField("String", "WEATHER_API_KEY", "\"$weatherApiKey\"")
+        } else {
+            throw GradleException("local.properties file not found")
+        }
     }
 
     buildTypes {
@@ -28,7 +40,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "API_KEY", "\"${rootProject.extra.properties["API_KEY"]}\"")
         }
     }
     compileOptions {
@@ -83,4 +94,6 @@ dependencies {
 
     val glideVersion = "4.11.0"
     implementation ("com.github.bumptech.glide:glide:$glideVersion")
+
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
 }
