@@ -6,6 +6,7 @@ data class WeatherApiResponse(
     val main: Main,
     val visibility: Int,
     val wind: Wind,
+    val rain: Rain?,
     val dt: Long,
     val sys: Sys,
     val timezone: Int,
@@ -46,4 +47,9 @@ data class Sys(
     val country: String,
     val sunrise: Long,
     val sunset: Long
+)
+
+data class Rain(
+    val h1: Double? = null,
+    val h3: Double? = null
 ) 

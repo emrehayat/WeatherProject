@@ -60,4 +60,14 @@ class WeatherAPIService {
             apiKey = apiKey
         )
     }
+
+    suspend fun getWeatherByCity(
+        cityName: String,
+        apiKey: String
+    ): WeatherApiResponse {
+        return api.getWeatherByCity(
+            cityName = cityName,
+            apiKey = apiKey
+        )
+    }
 }

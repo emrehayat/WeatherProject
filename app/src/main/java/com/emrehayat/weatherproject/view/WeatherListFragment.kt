@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.emrehayat.weatherproject.adapter.WeatherRecyclerAdapter
 import com.emrehayat.weatherproject.databinding.FragmentWeatherListBinding
 import com.emrehayat.weatherproject.viewmodel.WeatherListViewModel
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.content.Context
 
 class WeatherListFragment : Fragment() {
 
@@ -40,13 +43,37 @@ class WeatherListFragment : Fragment() {
         binding.weatherRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.weatherRecyclerView.adapter = weatherRecyclerAdapter
 
+        binding.showAllButton.setOnClickListener {
+            binding.searchEditText.text?.clear()
+            viewModel.refreshDataFromInternet()
+        }
+
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.weatherLoading.visibility = View.VISIBLE
             binding.weatherErrorMessage.visibility = View.GONE
             binding.weatherRecyclerView.visibility = View.GONE
+            binding.searchEditText.text?.clear()
             viewModel.refreshDataFromInternet()
             binding.swipeRefreshLayout.isRefreshing = false
         }
+
+        binding.searchEditText.setOnEditorActionListener { textView, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val cityName = textView.text.toString()
+                if (cityName.isNotEmpty()) {
+                    viewModel.searchCity(cityName)
+                    // Klavyeyi gizle
+                    val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(textView.windowToken, 0)
+                    true
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        }
+
         observeLiveData()
     }
 
